@@ -1,7 +1,6 @@
 import Data.Array
 import Data.Char
 import Data.List
-import Data.Maybe (isJust)
 import System.IO
 
 solution1 :: String -> Int
@@ -30,15 +29,16 @@ dp springs blocks = d 0 0 0 -- SpringIndex BlockIndex CurrentAmountOf#
       | s == sl && b == bi && c == b' ! b = 1
       | s == sl && b == bl && c == 0 = 1
       | s == sl = 0
-      | s' ! s == '?' = sum [runDot s b c, runHash s b c ]
-      | s' ! s == '#' = runHash s b c
-      | otherwise = runDot s b c
+      | s' ! s == '?' = sum [rd s b c, rh s b c ]
+      | s' ! s == '#' = rh s b c
+      | otherwise = rd s b c
 
-    runDot s b c
+    rd s b c
       | c == 0 = ds ! (s + 1, b, 0)
       | c > 0 && b < bl && c == b' ! b = ds ! (s + 1, b + 1, 0)
       | otherwise = 0
-    runHash s b c = ds ! (s + 1, b, c + 1)
+    rh s b c = ds ! (s + 1, b, c + 1)
+
     ds = listArray bounds [d s b c | (s, b, c) <- range bounds]
     bounds = ((0, 0, 0), (sl, bl, sl))
 
